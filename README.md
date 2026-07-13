@@ -2,9 +2,9 @@
 
 Source for the **Lyu Lab** website — the Evnin Family Laboratory of Computational Molecular Discovery at The Rockefeller University.
 
-**Live site:** https://lyu-lab.github.io  *(custom domain `lyulab.org` coming soon)*
+**Live site:** https://lyulab.org
 
-Built with [Jekyll](https://jekyllrb.com/) and deployed to GitHub Pages via GitHub Actions. **Anything merged to `main` goes live automatically in about a minute.**
+Built with [Jekyll](https://jekyllrb.com/). A GitHub Actions workflow builds the site and deploys it to our SiteGround hosting (which serves it over HTTPS) on every push. **Anything merged to `main` goes live automatically in about a minute.**
 
 ---
 
@@ -29,7 +29,7 @@ Built with [Jekyll](https://jekyllrb.com/) and deployed to GitHub Pages via GitH
 | `_data/navigation.yml` | Top navigation menu |
 | `_includes/`, `_layouts/` | Page templates (HTML) — rarely need editing |
 | `_config.yml` | Site-wide settings |
-| `.github/workflows/pages.yml` | The build-and-deploy pipeline |
+| `.github/workflows/deploy-siteground.yml` | The build-and-deploy pipeline (builds Jekyll, uploads to SiteGround) |
 
 ---
 

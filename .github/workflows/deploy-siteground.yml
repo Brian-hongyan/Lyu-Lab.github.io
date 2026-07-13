@@ -1,0 +1,47 @@
+name: Deploy to SiteGround
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: siteground
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Install Jekyll
+        run: gem install jekyll -v '~> 4.3'
+
+      - name: Build site
+        run: jekyll build
+        env:
+          JEKYLL_ENV: production
+
+      - name: Drop non-public files
+        run: rm -f _site/CNAME _site/DEPLOY.md _site/LICENSE
+
+      - name: Deploy to SiteGround over SSH (rsync)
+        uses: easingthemes/ssh-deploy@v5.1.0
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SITEGROUND_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.SITEGROUND_HOST }}
+          REMOTE_USER: ${{ secrets.SITEGROUND_USER }}
+          REMOTE_PORT: '18765'
+          SOURCE: '_site/'
+          TARGET: ${{ secrets.SITEGROUND_PATH }}
+          # First deploy runs WITHOUT --delete so we never wipe public_html
+          # before verifying. Switch to '-rltvz --delete' once confirmed + backed up.
+          ARGS: '-rltvz'
